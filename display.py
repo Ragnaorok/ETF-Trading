@@ -29,7 +29,11 @@ FNGD_fig.update_layout(
     yaxis_title='Adj Close',
     title='FNGD Moving Average Plot'
 )
-
+FNGU_fig.update_layout(
+    xaxis_title='Date',
+    yaxis_title='Adj Close',
+    title='FNGU Moving Average Plot'
+)
 # Save the plot as HTML
 FNGD_fig.write_html('FNGD_plot.html')
 FNGU_fig.write_html('FNGU_plot.html')
