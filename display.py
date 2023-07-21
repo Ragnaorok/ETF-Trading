@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 fngd = pd.read_json('FNGD.json')
 fngu = pd.read_json('FNGU.json')
 # Select specific columns
-columns = ['Adj Close', 'Date']
+columns = ['Date', 'Close','Adj Close', 'Open', 'High','Low','Volume']
 fngd_graph = fngd[columns].copy()  # Make a copy to avoid the warning
 fngu_graph = fngu[columns].copy()
 
