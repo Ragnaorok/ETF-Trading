@@ -68,24 +68,31 @@ class Account:
         returns = (portfolio_value - initial_portfolio_value) / initial_portfolio_value
         return returns
         
-    def backtest_strategy(self, strategy, price_data):
+    def backtest_strategy(self, strategy, price_data, start_date, end_date):
         signals = strategy.get_signals()
-
+        if not isinstance(start_date, pd.Timestamp):
+            start_date = pd.Timestamp(start_date)
+        if not isinstance(end_date, pd.Timestamp):
+            end_date = pd.Timestamp(end_date)
         for _, signal in signals.iterrows():
             date = signal['Date']
 
-            if signal['FNGD Buy'] == 1:
-                self.buy('FNGD', price_data['FNGD'][price_data['FNGD']['Date'] == date]['Adj Close'].values[0], 100)
-            elif signal['FNGD Sell'] == 1:
-                self.sell('FNGD', price_data['FNGD'][price_data['FNGD']['Date'] == date]['Adj Close'].values[0], 100)
+            # Check if the signal date is within the specified backtest date range
+            if start_date <= pd.Timestamp(date) <= end_date:
+                if signal['FNGD Buy'] == 1:
+                    self.buy('FNGD', price_data['FNGD'][price_data['FNGD']['Date'] == date]['Adj Close'].values[0], 100)
+                elif signal['FNGD Sell'] == 1:
+                    self.sell('FNGD', price_data['FNGD'][price_data['FNGD']['Date'] == date]['Adj Close'].values[0], 100)
 
-            if signal['FNGU Buy'] == 1:
-                self.buy('FNGU', price_data['FNGU'][price_data['FNGU']['Date'] == date]['Adj Close'].values[0], 100)
-            elif signal['FNGU Sell'] == 1:
-                self.sell('FNGU', price_data['FNGU'][price_data['FNGU']['Date'] == date]['Adj Close'].values[0], 100)
+                if signal['FNGU Buy'] == 1:
+                    self.buy('FNGU', price_data['FNGU'][price_data['FNGU']['Date'] == date]['Adj Close'].values[0], 100)
+                elif signal['FNGU Sell'] == 1:
+                    self.sell('FNGU', price_data['FNGU'][price_data['FNGU']['Date'] == date]['Adj Close'].values[0], 100)
 
         final_balance = self.get_balance()
         returns = self.calculate_returns(price_data)
         return final_balance, returns
 
-        
+# Assuming you have defined 'strategy' and 'price_data'
+
+# Define the date range for backtesting

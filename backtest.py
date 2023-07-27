@@ -23,15 +23,30 @@ if __name__ == '__main__':
 
     # Get user input for time period
     start_date, end_date = get_user_input()
-
+    start_date = '2020-01-01'
+    end_date = '2023-07-21'
     # Filter price data based on user's preferred time period
-    price_data['FNGD'] = price_data['FNGD'][(price_data['FNGD']['Date'] >= start_date) & (price_data['FNGD']['Date'] <= end_date)]
-    price_data['FNGU'] = price_data['FNGU'][(price_data['FNGU']['Date'] >= start_date) & (price_data['FNGU']['Date'] <= end_date)]
 
     # Create instance of Account class
-    account = Account(initial_balance=100000)
+    account = Account()
 
     # Backtest the strategy
-    final_balance, returns = account.backtest_strategy(strategy, price_data)
+    final_balance, returns = account.backtest_strategy(strategy, price_data, start_date, end_date)    
     print(f"Final Account Balance: ${final_balance:.2f}")
     print(f"Returns: {returns:.2%}")
+# Assuming you have defined 'strategy' and 'price_data'
+# price_data = load_price_data()
+# strategy = TradingStrategy(price_data['FNGD'], price_data['FNGU'], window_size=20)
+# # Define the date range for backtesting
+# start_date = pd.Timestamp('2023-01-01')
+# end_date = pd.Timestamp('2023-06-30')
+
+# # Create an instance of the Account class
+# account = Account()
+
+# # Backtest the strategy for the specified date range
+# final_balance, returns = account.backtest_strategy(strategy, price_data, start_date, end_date)
+
+# # Print the results
+# print("Final Balance:", final_balance)
+# print("Returns:", returns)
