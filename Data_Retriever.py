@@ -6,8 +6,7 @@ import datetime
 current = datetime.date.today()
 
 # Define the tickers based on the ETFs you want to track
-tickers = ["AAPL", "TSLA", "NVDA","GOOGL","META","NFLX","TSLA","AMD","SNOW","MSFT"] # Substitute with your specific ETFs
-
+tickers = ["FNGU", "FNGD"]
 # Define an empty dictionary to hold all data
 all_data = {}
 
@@ -17,8 +16,11 @@ for ticker in tickers:
     all_data[ticker] = json.loads(data.reset_index().to_json(date_format='iso', orient='records'))
 
 # Convert the dictionary to JSON format
-data_json = json.dumps(all_data)
 
+FNGU_json = json.dumps(all_data["FNGU"])
+FNGD_json = json.dumps(all_data["FNGD"])
 # Save the JSON data to a file
-with open('ETF.json', 'w') as file:
-    file.write(data_json)
+with open('FNGU.json', 'w') as file:
+    file.write(FNGU_json)
+with open('FNGD.json', 'w') as file:
+    file.write(FNGD_json)
