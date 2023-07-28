@@ -1,3 +1,4 @@
+
 import pandas as pd
 import plotly.graph_objects as go
 
@@ -63,3 +64,4 @@ with open('combined.html', 'w', encoding='utf-8') as combined_file:
     with open('FNGU_table.html', 'r', encoding='utf-8') as table_file:
         combined_file.write('<h1>FNGU Table</h1>')
         combined_file.write(table_file.read())
+
