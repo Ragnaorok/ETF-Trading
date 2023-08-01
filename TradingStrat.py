@@ -1,8 +1,5 @@
 import pandas as pd
 import plotly.graph_objects as go
-import display
-from IPython.display import display
-
 
 #self trading strategy class
 class TradingStrategy:
@@ -50,16 +47,6 @@ class TradingStrategy:
     def calculate_strategy(self):
         self.fngd_graph['FNGD Strategy'] = self.fngd_graph.apply(lambda row: 1 if row['FNGD Buy'] == 1 else -1 if row['FNGD Sell'] == 1 else 0, axis=1)
         self.fngu_graph['FNGU Strategy'] = self.fngu_graph.apply(lambda row: 1 if row['FNGU Buy'] == 1 else -1 if row['FNGU Sell'] == 1 else 0, axis=1)
-        
-    def get_signals(self):
-        signals = pd.DataFrame({
-            'Date': self.fngd_graph['Date'],
-            'FNGD Buy': self.fngd_graph['FNGD Buy'],
-            'FNGD Sell': self.fngd_graph['FNGD Sell'],
-            'FNGU Buy': self.fngu_graph['FNGU Buy'],
-            'FNGU Sell': self.fngu_graph['FNGU Sell']
-        })
-        return signals
 
     def calculate_returns(self):
         self.fngd_graph['FNGD Returns'] = self.fngd_graph['Adj Close'].pct_change()
@@ -69,44 +56,149 @@ class TradingStrategy:
 
     def plot_graph(self):
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=self.fngd_graph['Date'], y=self.fngd_graph['Adj Close'], name='FNGD'))
-        fig.add_trace(go.Scatter(x=self.fngd_graph['Date'], y=self.fngd_graph['FNGD Moving Average'], name='FNGD Moving Average'))
-        fig.add_trace(go.Scatter(x=self.fngd_graph['Date'], y=self.fngd_graph['FNGD Upper Band'], name='FNGD Upper Band'))
-        fig.add_trace(go.Scatter(x=self.fngd_graph['Date'], y=self.fngd_graph['FNGD Lower Band'], name='FNGD Lower Band'))
-        fig.add_trace(go.Scatter(x=self.fngd_graph['Date'], y=self.fngd_graph['FNGD Returns'].cumsum(), name='FNGD Cumulative Returns'))
-        fig.add_trace(go.Scatter(x=self.fngd_graph['Date'], y=self.fngd_graph['FNGD Strategy Returns'].cumsum(), name='FNGD Strategy Cumulative Returns'))
+        fig.add_trace(go.Scatter(
+            x=self.fngd_graph['Date'],
+            y=self.fngd_graph['Adj Close'],
+            name='FNGD',
+            hovertemplate='Date: %{x}<br>Adj Close: %{y:.2f}<br><br>' + 
+                          'Open: %{customdata[0]:.2f}<br>High: %{customdata[1]:.2f}<br>Low: %{customdata[2]:.2f}<br>Close: %{customdata[3]:.2f}',
+            customdata=self.fngd_graph[['Open', 'High', 'Low', 'Close']].values,
+        ))
+        fig.add_trace(go.Scatter(
+            x=self.fngd_graph['Date'],
+            y=self.fngd_graph['FNGD Moving Average'],
+            name='FNGD Moving Average'
+        ))
+        fig.add_trace(go.Scatter(
+            x=self.fngd_graph['Date'],
+            y=self.fngd_graph['FNGD Upper Band'],
+            name='FNGD Upper Band'
+        ))
+        fig.add_trace(go.Scatter(
+            x=self.fngd_graph['Date'],
+            y=self.fngd_graph['FNGD Lower Band'],
+            name='FNGD Lower Band'
+        ))
+        fig.add_trace(go.Scatter(
+            x=self.fngd_graph['Date'],
+            y=self.fngd_graph['FNGD Returns'].cumsum(),
+            name='FNGD Cumulative Returns'
+        ))
+        fig.add_trace(go.Scatter(
+            x=self.fngd_graph['Date'],
+            y=self.fngd_graph['FNGD Strategy Returns'].cumsum(),
+            name='FNGD Strategy Cumulative Returns'
+        ))
+
         # Add buy and sell signals to the graph
         buy_signals = self.fngd_graph[self.fngd_graph['FNGD Buy'] == 1]
         for i, row in buy_signals.iterrows():
-            fig.add_annotation(x=row['Date'], y=row['Adj Close'], text='Buy', font=dict(color='green'),showarrow=True, arrowhead=1, arrowcolor='green', arrowsize=2, arrowwidth=1, ax=0, ay=-30)
+            fig.add_annotation(
+                x=row['Date'],
+                y=row['Adj Close'],
+                text='Buy',
+                font=dict(color='green'),
+                showarrow=True,
+                arrowhead=1,
+                arrowcolor='green',
+                arrowsize=2,
+                arrowwidth=1,
+                ax=0,
+                ay=-30
+            )
 
         sell_signals = self.fngd_graph[self.fngd_graph['FNGD Sell'] == 1]
         for i, row in sell_signals.iterrows():
-            fig.add_annotation(x=row['Date'], y=row['Adj Close'], text='Sell',font=dict(color='red'), showarrow=True, arrowhead=1, arrowcolor='red', arrowsize=2, arrowwidth=1, ax=0, ay=30)
+            fig.add_annotation(
+                x=row['Date'],
+                y=row['Adj Close'],
+                text='Sell',
+                font=dict(color='red'),
+                showarrow=True,
+                arrowhead=1,
+                arrowcolor='red',
+                arrowsize=2,
+                arrowwidth=1,
+                ax=0,
+                ay=30
+            )
 
         fig.update_layout(title='FNGD Trading Strategy', xaxis_title='Date', yaxis_title='Adj Close')
         fig.show()
 
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=self.fngu_graph['Date'], y=self.fngu_graph['Adj Close'], name='FNGU'))
-        fig.add_trace(go.Scatter(x=self.fngu_graph['Date'], y=self.fngu_graph['FNGU Moving Average'], name='FNGU Moving Average'))
-        fig.add_trace(go.Scatter(x=self.fngu_graph['Date'], y=self.fngu_graph['FNGU Upper Band'], name='FNGU Upper Band'))
-        fig.add_trace(go.Scatter(x=self.fngu_graph['Date'], y=self.fngu_graph['FNGU Lower Band'], name='FNGU Lower Band'))
-        fig.add_trace(go.Scatter(x=self.fngu_graph['Date'], y=self.fngu_graph['FNGU Returns'].cumsum(), name='FNGU Cumulative Returns'))
-        fig.add_trace(go.Scatter(x=self.fngu_graph['Date'], y=self.fngu_graph['FNGU Strategy Returns'].cumsum(), name='FNGU Strategy Cumulative Returns'))
+        fig.add_trace(go.Scatter(
+            x=self.fngu_graph['Date'],
+            y=self.fngu_graph['Adj Close'],
+            name='FNGU',
+            hovertemplate='Date: %{x}<br>Adj Close: %{y:.2f}<br><br>' + 
+                          'Open: %{customdata[0]:.2f}<br>High: %{customdata[1]:.2f}<br>Low: %{customdata[2]:.2f}<br>Close: %{customdata[3]:.2f}',
+            customdata=self.fngu_graph[['Open', 'High', 'Low', 'Close']].values,
+        ))
+        fig.add_trace(go.Scatter(
+            x=self.fngu_graph['Date'],
+            y=self.fngu_graph['FNGU Moving Average'],
+            name='FNGU Moving Average'
+        ))
+        fig.add_trace(go.Scatter(
+            x=self.fngu_graph['Date'],
+            y=self.fngu_graph['FNGU Upper Band'],
+            name='FNGU Upper Band'
+        ))
+        fig.add_trace(go.Scatter(
+            x=self.fngu_graph['Date'],
+            y=self.fngu_graph['FNGU Lower Band'],
+            name='FNGU Lower Band'
+        ))
+        fig.add_trace(go.Scatter(
+            x=self.fngu_graph['Date'],
+            y=self.fngu_graph['FNGU Returns'].cumsum(),
+            name='FNGU Cumulative Returns'
+        ))
+        fig.add_trace(go.Scatter(
+            x=self.fngu_graph['Date'],
+            y=self.fngu_graph['FNGU Strategy Returns'].cumsum(),
+            name='FNGU Strategy Cumulative Returns'
+        ))
+
         # Add buy and sell signals to the graph
         buy_signals = self.fngu_graph[self.fngu_graph['FNGU Buy'] == 1]
         for i, row in buy_signals.iterrows():
-            fig.add_annotation(x=row['Date'], y=row['Adj Close'], text='Buy', font=dict(color='green'),showarrow=True, arrowhead=1, arrowcolor='green', arrowsize=2, arrowwidth=1, ax=0, ay=-30)
-        
+            fig.add_annotation(
+                x=row['Date'],
+                y=row['Adj Close'],
+                text='Buy',
+                font=dict(color='green'),
+                showarrow=True,
+                arrowhead=1,
+                arrowcolor='green',
+                arrowsize=2,
+                arrowwidth=1,
+                ax=0,
+                ay=-30
+            )
+
         sell_signals = self.fngu_graph[self.fngu_graph['FNGU Sell'] == 1]
         for i, row in sell_signals.iterrows():
-            fig.add_annotation(x=row['Date'], y=row['Adj Close'], text='Sell',font=dict(color='red'), showarrow=True, arrowhead=1, arrowcolor='red', arrowsize=2, arrowwidth=1, ax=0, ay=30)
+            fig.add_annotation(
+                x=row['Date'],
+                y=row['Adj Close'],
+                text='Sell',
+                font=dict(color='red'),
+                showarrow=True,
+                arrowhead=1,
+                arrowcolor='red',
+                arrowsize=2,
+                arrowwidth=1,
+                ax=0,
+                ay=30
+            )
+
         fig.update_layout(title='FNGU Trading Strategy', xaxis_title='Date', yaxis_title='Adj Close')
         fig.show()
 
 def main():
-    # Load data
+    # Load data (replace 'FNGD.json' and 'FNGU.json' with your data files)
     fngd_data = pd.read_json('FNGD.json')
     fngu_data = pd.read_json('FNGU.json')
 
@@ -124,4 +216,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
