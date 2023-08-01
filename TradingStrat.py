@@ -55,12 +55,17 @@ class TradingStrategy:
     def get_signals(self):
         signals = pd.DataFrame({
             'Date': self.fngd_graph['Date'],
-            'FNGD Buy': self.fngd_graph['FNGD Buy'],
-            'FNGD Sell': self.fngd_graph['FNGD Sell'],
-            'FNGU Buy': self.fngu_graph['FNGU Buy'],
-            'FNGU Sell': self.fngu_graph['FNGU Sell']
+            'FNGD BB Buy': self.fngd_graph['FNGD Buy'],
+            'FNGD BB Sell': self.fngd_graph['FNGD Sell'],
+            'FNGU BB Buy': self.fngu_graph['FNGU Buy'],
+            'FNGU BB Sell': self.fngu_graph['FNGU Sell'],
+            'FNGD MA Buy': self.fngd_graph['FNGD MA Buy'],
+            'FNGD MA Sell': self.fngd_graph['FNGD MA Sell'],
+            'FNGU MA Buy': self.fngu_graph['FNGU MA Buy'],
+            'FNGU MA Sell': self.fngu_graph['FNGU MA Sell']
         })
         return signals
+
 
     def calculate_returns(self):
         self.fngd_graph['FNGD Returns'] = self.fngd_graph['Adj Close'].pct_change()
