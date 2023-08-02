@@ -1,6 +1,18 @@
 import pandas as pd
 import plotly.graph_objects as go
 
+def display_data(all_data):
+    # Extract the data for FNGD and FNGU from all_data
+    fngd = pd.DataFrame(all_data['FNGD'])
+    fngu = pd.DataFrame(all_data['FNGU'])
+    with open('combined.html', 'w', encoding='utf-8') as combined_file:
+        combined_file.write('<style>h1 {text-align: center;}</style>')
+        with open('FNGD_plot.html', 'r', encoding='utf-8') as plot_file:
+            combined_file.write('<h1>FNGD Plot</h1>')
+            combined_file.write(plot_file.read())
+    with open('combined.html', 'r', encoding='utf-8') as file:
+        return file.read()
+
 # Read the JSON file into a pandas DataFrame
 fngd = pd.read_json('FNGD.json')
 fngu = pd.read_json('FNGU.json')
@@ -107,4 +119,3 @@ with open('combined.html', 'w', encoding='utf-8') as combined_file:
     with open('FNGU_table.html', 'r', encoding='utf-8') as table_file:
         combined_file.write('<h1>FNGU Table</h1>')
         combined_file.write(table_file.read())
-

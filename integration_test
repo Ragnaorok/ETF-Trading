@@ -14,7 +14,8 @@ class IntegrationTest(unittest.TestCase):
         result = display_data(all_data)
 
         # Define the expected output as the contents of combined_html
-        expected_output = result
+        with open('combined.html', 'r', encoding = 'utf-8') as file:
+            expected_output = file.read()
 
         # Print the actual output and the expected output for comparison
         print("Actual Output:")
