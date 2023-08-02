@@ -1,0 +1,29 @@
+import unittest
+from Data_Retriever import retrieve_data
+from display import display_data
+
+class IntegrationTest(unittest.TestCase):
+    def test_data_retrieval_and_display(self):
+        # Define the tickers for which to retrieve data
+        tickers = ['FNGU', 'FNGD']
+
+        # Call the function from Data_Retriever.py
+        all_data = retrieve_data(tickers)
+
+        # Call the function from the Display.py file with the retrieved data
+        result = display_data(all_data)
+
+        # Define the expected output as the contents of combined_html
+        expected_output = result
+
+        # Print the actual output and the expected output for comparison
+        print("Actual Output:")
+        print(result)
+        print("Expected Output:")
+        print(expected_output)
+
+        # Compare the actual output with the expected output
+        self.assertEqual(result, expected_output)
+
+if __name__ == "__main__":
+    unittest.main()
