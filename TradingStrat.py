@@ -1,6 +1,6 @@
 import pandas as pd
 import plotly.graph_objects as go
-import display
+# import display
 from IPython.display import display
 from BBStrategy import BollingerBands
 from MAStrat import MovingAvg

@@ -16,15 +16,6 @@ def get_user_input():
     return strategy_choice, start_date, end_date
 
 
-def trading_account_decorator(AccountClass):
-
-    class WrappedAccount(AccountClass):
-        def __init__(self, initial_balance=100000):
-            super().__init__(initial_balance)
-            self.transactions = pd.DataFrame(columns=['Date', 'Symbol', 'Action', 'Price', 'Shares', 'Amount'])
-            self.username = username
-
-    return WrappedAccount
 
 def Ibacktest():
     # Load price data
@@ -37,15 +28,16 @@ def Ibacktest():
     
     strategy_choice = 'both'
     start_date = '2023-01-01'
-    end_date = '2023-04-04'
+    end_date = '2023-01-13'
     strategy = TradingStrategy(price_data['FNGD'], price_data['FNGU'], strategy_choice=strategy_choice, window_size=20)
 
         
     # Create instance of Account class
     account = Account()
 
-    final_balance, returns = account.backtest_strategy(strategy, price_data, start_date, end_date)    
+    final_balance, returnsP, returnsD= account.backtest_strategy(strategy, price_data, start_date, end_date)    
     print(f"\nFinal Account Balance: ${final_balance:.2f}")
-    print(f"Returns: {returns:.2%}")
+    print(f"Returns Gained: ${returnsD:.2f}")
+    print(f"Returns Percentage: {returnsP:.2%}")
 
 Ibacktest()
