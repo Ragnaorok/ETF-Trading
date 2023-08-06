@@ -13,13 +13,13 @@ Resources:
               ActionTypeId:
                 Category: Source
                 Owner: AWS
-                Provider: CodeCommit  # Replace this with your source provider (e.g., GitHub, S3, CodeCommit, etc.)
+                Provider: Github  # Replace this with your source provider (e.g., GitHub, S3, CodeCommit, etc.)
                 Version: '1'
               OutputArtifacts:
                 - Name: MyAppSourceOutput
               Configuration:
-                RepositoryName: your-repo-name  # Replace this with your repository name
-                BranchName: your-branch-name  # Replace this with your branch name
+                RepositoryName: ETF-Trading  # Replace this with your repository name
+                BranchName: main  # Replace this with your branch name
         - Name: Build
           Actions:
             - Name: BuildAction
@@ -33,7 +33,7 @@ Resources:
               OutputArtifacts:
                 - Name: MyAppBuildOutput
               Configuration:
-                ProjectName: your-codebuild-project-name  # Replace this with your CodeBuild project name
+                ProjectName: etf  # Replace this with your CodeBuild project name
 
   MyPipelineRole:
     Type: AWS::IAM::Role
