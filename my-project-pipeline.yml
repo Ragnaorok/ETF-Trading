@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS CodePipeline Example
+
+Resources:
+  MyPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: !GetAtt MyPipelineRole.Arn
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: SourceAction
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: CodeCommit  # Replace this with your source provider (e.g., GitHub, S3, CodeCommit, etc.)
+                Version: '1'
+              OutputArtifacts:
+                - Name: MyAppSourceOutput
+              Configuration:
+                RepositoryName: your-repo-name  # Replace this with your repository name
+                BranchName: your-branch-name  # Replace this with your branch name
+        - Name: Build
+          Actions:
+            - Name: BuildAction
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: '1'
+              InputArtifacts:
+                - Name: MyAppSourceOutput
+              OutputArtifacts:
+                - Name: MyAppBuildOutput
+              Configuration:
+                ProjectName: your-codebuild-project-name  # Replace this with your CodeBuild project name
+
+  MyPipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+
+Outputs:
+  PipelineName:
+    Value: !Ref MyPipeline
